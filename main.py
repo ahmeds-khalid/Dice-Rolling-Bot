@@ -4,6 +4,7 @@ from nextcord.ui import view
 from nextcord import Interaction
 import os
 import random
+import webserver
 
 client = commands.Bot(command_prefix="!", intents=nextcord.Intents.all())
 
@@ -30,8 +31,8 @@ async def test(interaction: Interaction):
 
     # Add information to the embed
     embed.set_image(url)
-    embed.add_field(name='Result', value= rand, inline=False)
-    embed.add_field(name='User', value=interaction.user.display_name, inline=False)
+    embed.add_field(name='Result:', value= rand, inline=False)
+    embed.add_field(name='User:', value=interaction.user.display_name, inline=False)
 
     # Send the embed as a message
     await interaction.response.send_message(embed=embed)
@@ -69,4 +70,5 @@ async def ask(ctx):
     if view.value == False:
         print("Cancelled")
 
+webserver.keep_alive()
 client.run("MTE4NzA2OTY5Mjc4Mzg5ODc4Ng.GXsjMo.6psVZpCk1HJo_XImhjoNsiRQ-vcLXY2ddZ0BAM")
