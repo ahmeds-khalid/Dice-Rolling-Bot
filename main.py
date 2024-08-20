@@ -32,7 +32,7 @@ async def test(interaction: Interaction):
     # Add information to the embed
     embed.set_image(url)
     embed.add_field(name='Result:', value= rand, inline=False)
-    embed.add_field(name='User:', value=interaction.user.display_name, inline=False)
+    embed.add_field(name='User:', value=interaction.user.mention, inline=False)
 
     # Send the embed as a message
     await interaction.response.send_message(embed=embed)
