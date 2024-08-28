@@ -1,6 +1,5 @@
 import nextcord
 from nextcord.ext import commands
-from nextcord.ui import view
 from nextcord import Interaction
 import os
 import random
@@ -13,8 +12,8 @@ async def on_ready():
     print("Dice Roller is ready to use!!")
 
 @client.slash_command(name="roll", description="Roll a standard six-sided die", guild_ids=[1173218609682731038])
-async def test(interaction: Interaction):
-    embed = nextcord.Embed(title='Dice Roll Results', color=0xffffff)  # You can customize the color
+async def roll(interaction: Interaction):
+    embed = nextcord.Embed(title='Dice Roll Results', color=0xffffff)
     rand = random.randint(1, 6)
     if rand == 1:
         url="https://i.postimg.cc/TYyFymxQ/dice1.png"
@@ -29,46 +28,46 @@ async def test(interaction: Interaction):
     elif rand == 6:
         url="https://i.postimg.cc/0jHNVSXc/dice6.png"
 
-    # Add information to the embed
     embed.set_image(url)
-    embed.add_field(name='Result:', value= rand, inline=False)
+    embed.add_field(name='Result:', value=rand, inline=False)
     embed.add_field(name='User:', value=interaction.user.mention, inline=False)
 
-    # Send the embed as a message
     await interaction.response.send_message(embed=embed)
 
-#UI
+@client.slash_command(name="flip", description="Flip a coin", guild_ids=[1173218609682731038])
+async def flip(interaction: Interaction):
+    embed = nextcord.Embed(title='Coin Flip Results', color=0xffffff)
+    result = ""
+    rand = random.randint(1, 2)
+    if rand == 1:
+        url="https://i.postimg.cc/63XkhLr1/heads.png"
+        result = "Heads"
+    elif rand == 2:
+        url="https://i.postimg.cc/sD0DJXnC/tails.png"
+        result = "Tails"
 
-class Confirm(nextcord.ui.View):
-    def __init__(self):
-        super().__init__()
-        self.value = None
+    embed.set_image(url)
+    embed.add_field(name='Result:', value=result, inline=False)
+    embed.add_field(name='User:', value=interaction.user.mention, inline=False)
 
-    @nextcord.ui.button(label="Confirm", style=nextcord.ButtonStyle.danger)
-    async def confirm(self, button: nextcord.ui.Button, interaction: nextcord.Interaction):
-        await interaction.response.send_message("Confirming", ephemeral=True)
-        self.value = True
-        self.stop()
+    await interaction.response.send_message(embed=embed)
 
-    @nextcord.ui.button(label="Cancel", style=nextcord.ButtonStyle.blurple)
-    async def cancel(self, button: nextcord.ui.Button, interaction: nextcord.Interaction):
-        await interaction.response.send_message("Cancelling", ephemeral=True)
-        self.value = False
-        self.stop()
+@client.slash_command(name="custom_roll", description="Roll custom dice", guild_ids=[1173218609682731038])
+async def custom_roll(
+    interaction: Interaction,
+    sides: int = nextcord.SlashOption(description="Number of sides on the die", min_value=2, max_value=100),
+    number: int = nextcord.SlashOption(description="Number of dice to roll", min_value=1, max_value=10)
+):
+    results = [random.randint(1, sides) for _ in range(number)]
+    total = sum(results)
+    
+    embed = nextcord.Embed(title='Custom Dice Roll Results', color=0xffffff)
+    embed.add_field(name='Dice:', value=f"{number}d{sides}", inline=False)
+    embed.add_field(name='Results:', value=', '.join(map(str, results)), inline=False)
+    embed.add_field(name='Total:', value=total, inline=False)
+    embed.add_field(name='User:', value=interaction.user.mention, inline=False)
 
-@client.command()
-async def ask(ctx):
-    view = Confirm()
-    await ctx.send("Do you want to confirm somthing.", view=view)
+    await interaction.response.send_message(embed=embed)
 
-    await view.wait()
-
-    if not view.value == None:
-        print("Timed Out")
-    if view.value == True:
-        print("Confirmed")
-    if view.value == False:
-        print("Cancelled")
-
-webserver.keep_alive()
+# webserver.keep_alive()
 client.run("MTE4NzA2OTY5Mjc4Mzg5ODc4Ng.GXsjMo.6psVZpCk1HJo_XImhjoNsiRQ-vcLXY2ddZ0BAM")
