@@ -70,4 +70,4 @@ async def custom_roll(
     await interaction.response.send_message(embed=embed)
 
 # webserver.keep_alive()
-client.run("MTE4NzA2OTY5Mjc4Mzg5ODc4Ng.GXsjMo.6psVZpCk1HJo_XImhjoNsiRQ-vcLXY2ddZ0BAM")
+client.run(Token)
